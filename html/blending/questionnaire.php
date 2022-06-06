@@ -12,21 +12,24 @@ require_once 'header.php';
 require './../../cgi-bin/blending/QuestionnaireObject.php';
 
 // if the questionnaire hasn't been made yet
-if (!isset($_SESSION['questionnaire'])) {
+if (!isset($_SESSION['questionnaire']) && ($dbRes = mysqli_query($sqlConnection, "SELECT questionnaireSerialization FROM Family WHERE UserID = {$_SESSION['ID']}", "MYSQL_ASSOC"))->num_rows == 0) {
     // set up questionnaire
     $questionnaire = new QuestionnaireObject();
 
     // start questionnaire form queue (might be able to do in questionnaire constructor)
     $questionnaire->setFormQueue("about you forms"); // set the initial form queue and add it to the questionnaire
 
-    // add data tables to questionnaire object
-    $questionnaire->addDataTable(array("TableName" => array("ColumnName1", "ColumnName2", "etc")));
-    // repeat for as many tables as need added...
+    // add data tables to questionnaire object (dad has the object fairly set up)
 
     // set save and quit logic (here or in constructor)
 } else {
     // continue questionnaire
-    $questionnaire = unserialize($_SESSION['questionnaire']);
+    if (isset($_SESSION['questionnaire'])) {
+        $questionnaire = unserialize($_SESSION['questionnaire']);
+    } else {
+        $questionnaire = $dbRes->fetch_all()['questionnaireSerialization'];
+    } //end if
+
     $queue = $questionnaire->getFormQueue();
     $currentFormIndex = $_SESSION['CFI'];
     $currentForm = $questionnaire[$currentFormIndex];
@@ -46,4 +49,5 @@ if (!isset($_SESSION['questionnaire'])) {
     } //end if
 } //end if
 
+require_once 'footer.php';
 ?>
