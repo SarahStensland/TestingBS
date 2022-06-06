@@ -10,7 +10,7 @@
 $title = "Questionnaire";
 
 // if the questionnaire hasn't been made yet
-if (!isset($_SESSION['questionnaire'])) {
+if (banana) {
     // set up questionnaire
 } else {
     // continue questionnaire
