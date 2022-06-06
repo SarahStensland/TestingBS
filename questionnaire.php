@@ -8,7 +8,6 @@
 
 // initialize everything
 $title = "Questionnaire";
-require_once 'header.php';
 
 // if the questionnaire hasn't been made yet
 if (!isset($_SESSION['questionnaire'])) {
